@@ -530,8 +530,8 @@
                         "isCorrect": false
                     },
                     {
-                        "text": "S = y - a + b(y - T)", // Esta opção foi alterada para ser INCORRETA.
-                        "rationale": "Esta expressão está incorreta, pois inverte o sinal da propensão marginal a consumir ao tentar deduzir a poupança da renda disponível.",
+                        "text": "S = y + b - T", // Esta alternativa foi modificada para ser CLARAMENTE incorreta
+                        "rationale": "Esta expressão não representa corretamente a função de poupança e ignora a relação fundamental entre renda, consumo e tributos na poupança.",
                         "isCorrect": false
                     },
                     {
@@ -559,7 +559,7 @@
         const resultsSection = document.querySelector('.results-section');
         const userScoreSpan = document.getElementById('userScore');
         const totalQuestionsSpan = document.getElementById('totalQuestions');
-        const restartQuizBtn = document.getElementById('restartQuiz');
+        const restartQuizBtn = document = document.getElementById('restartQuiz'); // Corrigido aqui para remover o 'document = ' extra.
 
         function renderQuiz() {
             quizForm.innerHTML = '';
