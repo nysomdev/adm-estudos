@@ -502,4 +502,241 @@
                     },
                     {
                         "text": "Preços são inflexíveis e a moeda não é neutra.",
-                        "rationale": "Keynes argumentou que os preços (salários, por exemplo) não se ajust
+                        "rationale": "Keynes argumentou que os preços (salários, por exemplo) não se ajustam rapidamente, e que a moeda tem um papel ativo na economia real (influencia investimento, emprego).",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Preços são flexíveis e a moeda não é neutra.",
+                        "rationale": "Keynes não acreditava que os preços fossem flexíveis no curto prazo.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Preços são inflexíveis e a moeda é neutra.",
+                        "rationale": "Keynes não acreditava que a moeda fosse neutra; pelo contrário, ela era crucial na determinação da demanda agregada.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Preços e moeda não têm influência na economia real.",
+                        "rationale": "Keynes atribuía grande importância a ambos, especialmente à moeda, no funcionamento da economia real.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Lembre-se da crítica de Keynes aos modelos que assumiam ajuste automático dos preços e a neutralidade do dinheiro."
+            },
+            {
+                "question": "Considerando a função de consumo C = a + b(y - T), qual é a expressão correta para a função de poupança (S) no modelo keynesiano com tributos?",
+                "answerOptions": [
+                    {
+                        "text": "S = a + (1 - b)(y - T)",
+                        "rationale": "O consumo autônomo 'a' aparece com sinal negativo na função de poupança, pois é um consumo mesmo com renda zero (despoupança).",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "S = y + b - T",
+                        "rationale": "Esta expressão não representa corretamente a função de poupança e ignora a relação fundamental entre renda, consumo e tributos na poupança.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "S = -a + (1 - b)(y - T)",
+                        "rationale": "Esta é a expressão simplificada e correta da função de poupança, que representa a parcela da renda disponível que não é consumida.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "S = (1 - b)y - a",
+                        "rationale": "Esta forma não considera a renda disponível corretamente, ou seja, desconsidera o efeito dos tributos na poupança.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "S = b(y - T) - a",
+                        "rationale": "Esta expressão é incorreta para a função de poupança.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "A poupança é o que sobra da renda disponível depois do consumo. Lembre-se que a renda disponível é (y - T)."
+            }
+        ];
+
+        // --- Variáveis globais para os elementos HTML ---
+        // As variáveis são declaradas fora do DOMContentLoaded, mas seus valores são atribuídos dentro,
+        // garantindo que os elementos HTML já existam antes de serem manipulados pelo script.
+        let quizForm, submitQuizBtn, resultsSection, userScoreSpan, totalQuestionsSpan, restartQuizBtn;
+        let audioLowScore, audioHighScore; 
+
+        // Adiciona um event listener para garantir que o script só execute após o DOM estar completamente carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Debug: DOMContentLoaded - HTML fully loaded."); // Confirma que o DOM está carregado
+
+            // Atribuição de elementos HTML a variáveis
+            quizForm = document.getElementById('quizForm');
+            submitQuizBtn = document.getElementById('submitQuiz');
+            resultsSection = document.querySelector('.results-section');
+            userScoreSpan = document.getElementById('userScore');
+            totalQuestionsSpan = document.getElementById('totalQuestions');
+            restartQuizBtn = document.getElementById('restartQuiz'); 
+
+            // --- Verificações essenciais de depuração ---
+            // Se algum desses elementos for null, um erro será logado no console, e o quiz não funcionará.
+            if (!quizForm) { console.error("ERRO: Elemento 'quizForm' (id='quizForm') não encontrado. O quiz não pode ser renderizado."); return; }
+            if (!submitQuizBtn) { console.error("ERRO: Elemento 'submitQuiz' (id='submitQuiz') não encontrado."); return; }
+            if (!resultsSection) { console.error("ERRO: Elemento 'results-section' (classe='.results-section') não encontrado."); return; }
+            if (!userScoreSpan) { console.error("ERRO: Elemento 'userScore' (id='userScore') não encontrado."); return; }
+            if (!totalQuestionsSpan) { console.error("ERRO: Elemento 'totalQuestions' (id='totalQuestions') não encontrado."); return; }
+            if (!restartQuizBtn) { console.error("ERRO: Elemento 'restartQuiz' (id='restartQuiz') não encontrado."); return; }
+            // --- Fim das verificações essenciais ---
+
+            // Inicializa os objetos de áudio. Eles devem ser criados após o DOM estar pronto.
+            audioLowScore = new Audio('audio1.mp3'); 
+            audioHighScore = new Audio('audio2.mp3'); // CORRIGIDO: Caminho do arquivo MP3 estava errado!
+            console.log("Debug: Objetos de áudio criados e caminhos corrigidos.");
+
+            // Adiciona os event listeners aos botões
+            submitQuizBtn.addEventListener('click', checkAnswers);
+            restartQuizBtn.addEventListener('click', resetQuiz);
+            console.log("Debug: Event listeners adicionados.");
+
+            // Renderiza o quiz ao carregar a página
+            renderQuiz();
+            console.log("Debug: Chamada de renderQuiz() concluída.");
+        });
+
+
+        // Função para renderizar o quiz na página
+        function renderQuiz() {
+            console.log("Debug: renderQuiz function called.");
+            quizForm.innerHTML = '';
+            console.log("Debug: quizData length:", quizData.length);
+            if (quizData.length === 0) {
+                console.warn("Aviso: O array quizData está vazio. Nenhuma questão para renderizar.");
+                return;
+            }
+
+            quizData.forEach((q, index) => {
+                const questionSection = document.createElement('div');
+                questionSection.classList.add('question-section');
+                questionSection.setAttribute('data-question-index', index);
+
+                const questionNumber = document.createElement('div');
+                questionNumber.classList.add('question-number');
+                questionNumber.textContent = `Questão ${index + 1}:`;
+                questionSection.appendChild(questionNumber);
+
+                const questionText = document.createElement('div');
+                questionText.classList.add('question-text');
+                questionText.textContent = q.question;
+                questionSection.appendChild(questionText);
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options-container');
+
+                q.answerOptions.forEach((option, optionIndex) => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `
+                        <input type="radio" name="question${index}" value="${optionIndex}">
+                        <span>${option.text}</span>
+                        <div class="rationale-text">${option.rationale}</div>
+                    `;
+                    optionsContainer.appendChild(label);
+                });
+
+                questionSection.appendChild(optionsContainer);
+
+                const hintText = document.createElement('div');
+                hintText.classList.add('hint-text');
+                hintText.textContent = `Dica: ${q.hint}`;
+                questionSection.appendChild(hintText);
+
+                quizForm.appendChild(questionSection);
+            });
+            totalQuestionsSpan.textContent = quizData.length;
+            console.log("Debug: Quiz renderizado com sucesso. Total de questões exibidas:", quizData.length);
+        }
+
+        // Função para verificar as respostas e exibir os resultados
+        function checkAnswers() {
+            let score = 0;
+            console.log("Debug: checkAnswers function started.");
+            document.querySelector('.quiz-container').classList.add('show-results');
+
+            quizData.forEach((q, questionIndex) => {
+                const selectedOptionInput = document.querySelector(`input[name="question${questionIndex}"]:checked`);
+                console.log(`Debug: Q${questionIndex + 1}: Opção selecionada (value):`, selectedOptionInput ? selectedOptionInput.value : 'Nenhuma selecionada');
+
+                const questionSection = document.querySelector(`.question-section[data-question-index="${questionIndex}"]`);
+
+                const hint = questionSection.querySelector('.hint-text');
+                if (hint) {
+                    hint.style.display = 'block';
+                }
+
+                q.answerOptions.forEach((option, optionIndex) => {
+                    const label = questionSection.querySelector(`label input[value="${optionIndex}"]`).closest('label');
+                    const rationaleText = label.querySelector('.rationale-text');
+
+                    rationaleText.style.display = 'block';
+
+                    if (option.isCorrect) {
+                        label.classList.add('correct-option');
+                    }
+
+                    if (selectedOptionInput && parseInt(selectedOptionInput.value) === optionIndex) {
+                        label.classList.add('selected');
+                        if (option.isCorrect) {
+                            score++;
+                            console.log(`Debug: Q${questionIndex + 1}: Resposta correta! Pontuação atual:`, score);
+                        } else {
+                            label.classList.add('incorrect-option');
+                            console.log(`Debug: Q${questionIndex + 1}: Resposta incorreta.`);
+                        }
+                    }
+                });
+            });
+
+            console.log("Debug: Pontuação final calculada:", score);
+
+            if (userScoreSpan) {
+                userScoreSpan.textContent = score;
+                console.log("Debug: Pontuação exibida no span.");
+            } else {
+                console.error("ERRO: userScoreSpan não foi encontrado em checkAnswers!");
+            }
+            
+            if (resultsSection) {
+                resultsSection.style.display = 'block';
+                console.log("Debug: Seção de resultados definida como 'block'.");
+            } else {
+                console.error("ERRO: resultsSection não foi encontrado em checkAnswers!");
+            }
+            
+            submitQuizBtn.style.display = 'none';
+
+            // Lógica para tocar o áudio com base na pontuação
+            console.log("Debug: Tocando áudio...");
+            if (score < 7) {
+                audioLowScore.play().catch(e => console.error("Erro ao tocar audio1.mp3:", e));
+            } else {
+                audioHighScore.play().catch(e => console.error("Erro ao tocar audio2.mp3:", e));
+            }
+        }
+
+        // Função para resetar o quiz
+        function resetQuiz() {
+            quizForm.reset();
+            resultsSection.style.display = 'none';
+            submitQuizBtn.style.display = 'block';
+            document.querySelector('.quiz-container').classList.remove('show-results');
+
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('selected', 'correct-option', 'incorrect-option');
+                    label.querySelector('.rationale-text').style.display = 'none';
+                });
+                const hintText = section.querySelector('.hint-text');
+                if (hintText) {
+                    hintText.style.display = 'none';
+                }
+            });
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
