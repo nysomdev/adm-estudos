@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisão Interativa: Macroeconomia e Revolução Keynesiana</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        .author-name {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            display: block;
+        }
+        .question-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 25px;
+        }
+        .question-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question-number {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #3f5263;
+        }
+        .options-container label {
+            display: block;
+            background-color: #ecf0f1;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+        }
+        .options-container label:hover {
+            background-color: #dde1e2;
+            transform: translateY(-2px);
+        }
+        .options-container input[type="radio"] {
+            display: none;
+        }
+        .options-container input[type="radio"] + span {
+            padding-left: 25px;
+            display: block;
+        }
+        .options-container input[type="radio"] + span::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid #95a5a6;
+            border-radius: 50%;
+            background-color: #fff;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        .options-container input[type="radio"]:checked + span::before {
+            border-color: #3498db;
+            background-color: #3498db;
+        }
+        .options-container input[type="radio"]:checked + span::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        /* --- Estilos de feedback APÓS a verificação --- */
+        .show-results label {
+            pointer-events: none;
+            transform: none !important;
+            background-color: #ecf0f1;
+            border: 1px solid #eee;
+            box-shadow: none;
+        }
+
+        .show-results input[type="radio"] + span::before,
+        .show-results input[type="radio"] + span::after {
+            display: none;
+        }
+        .show-results input[type="radio"] + span {
+            padding-left: 0; /* Remove o padding extra para o círculo */
+        }
+
+        .show-results label.correct-option {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .show-results label.selected.incorrect-option {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        /* Justificativa */
+        .rationale-text {
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding-left: 0;
+            color: #555;
+            display: none;
+            background-color: rgba(0,0,0,0.02);
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 4px;
+        }
+        .show-results .rationale-text {
+            display: block;
+        }
+        .show-results label.correct-option .rationale-text {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: none;
+            padding-left: 0;
+        }
+        .show-results label.selected.incorrect-option .rationale-text {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        /* Dica */
+        .hint-text {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #666;
+            font-style: italic;
+            border-top: 1px dashed #ddd;
+            padding-top: 10px;
+            display: none;
+        }
+        .show-results .hint-text {
+            display: block;
+        }
+
+        /* Botões e Resultados */
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+        }
+        .submit-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .results-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed #ccc;
+        }
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .restart-button {
+            background-color: #f39c12;
+            padding: 12px 25px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .restart-button:hover {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Revisão Interativa: Macroeconomia e Revolução Keynesiana</h1>
+        <span class="author-name">Autor: Wenysom Filipe</span>
+        <form id="quizForm">
+            </form>
+        <button type="submit" class="submit-button" id="submitQuiz">Verificar Respostas</button>
+        <div class="results-section" style="display:none;">
+            <p class="score">Sua Pontuação: <span id="userScore"></span> / <span id="totalQuestions"></span></p>
+            <button class="restart-button" id="restartQuiz">Refazer Revisão</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                "question": "Qual é o ramo da economia que estuda as variáveis agregadas de um país, como Produto Interno Bruto (PIB), desemprego, inflação e taxas de juros?",
+                "answerOptions": [
+                    {
+                        "text": "Microeconomia",
+                        "rationale": "A Microeconomia estuda agentes individuais e mercados específicos, não as variáveis agregadas de um país.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Econometria",
+                        "rationale": "Econometria é a aplicação de métodos estatísticos à economia, mas não o ramo que estuda as variáveis agregadas em si.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Macroeconomia",
+                        "rationale": "A Macroeconomia é o ramo da economia que estuda as variáveis agregadas, olhando para a economia como um todo.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Economia Comportamental",
+                        "rationale": "A Economia Comportamental estuda os efeitos de fatores psicológicos, sociais e emocionais nas decisões econômicas de indivíduos.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Economia Internacional",
+                        "rationale": "A Economia Internacional foca nas relações econômicas entre países, mas a Macroeconomia abrange as variáveis agregadas internas.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Pense no termo que significa 'grande economia'."
+            },
+            {
+                "question": "A Revolução Keynesiana representa uma mudança de paradigma na Macroeconomia que ocorreu após qual evento histórico?",
+                "answerOptions": [
+                    {
+                        "text": "A Revolução Industrial",
+                        "rationale": "A Revolução Industrial foi anterior e está mais ligada ao surgimento da Escola Clássica.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "As Guerras Mundiais",
+                        "rationale": "As Guerras Mundiais tiveram impacto, mas a Crise de 1929 foi o catalisador direto para as ideias de Keynes.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "A Crise de 1929",
+                        "rationale": "A Crise de 1929 (Grande Depressão) demonstrou que o mercado não se autoajustava rapidamente, validando a necessidade da intervenção proposta por Keynes.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "O surgimento da globalização",
+                        "rationale": "A globalização é um fenômeno mais recente e não o evento que impulsionou a Revolução Keynesiana.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "A crise do petróleo dos anos 1970",
+                        "rationale": "A crise do petróleo foi posterior e, ironicamente, desafiou alguns aspectos do keynesianismo, impulsionando o neoliberalismo.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Qual evento econômico do século XX foi o mais grave antes de Keynes?"
+            },
+            {
+                "question": "Qual é o princípio fundamental da teoria keynesiana que afirma que a demanda é o fator determinante da produção e do emprego em uma economia?",
+                "answerOptions": [
+                    {
+                        "text": "Lei de Say (a oferta cria sua própria demanda)",
+                        "rationale": "A Lei de Say é uma ideia clássica que Keynes refutou, argumentando que a demanda é que impulsiona a oferta em momentos de crise.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Teoria do Valor-Trabalho",
+                        "rationale": "A Teoria do Valor-Trabalho é associada à Escola Clássica e a Marx, não sendo o princípio central de Keynes.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Princípio da Mão Invisível",
+                        "rationale": "O Princípio da Mão Invisível é de Adam Smith (Clássicos) e defende a autorregulação do mercado.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Princípio da Demanda Efetiva",
+                        "rationale": "Este é o conceito central de Keynes, que postula que é a expectativa de demanda futura que leva as empresas a produzir e empregar, e que a falta de demanda é a causa do desemprego cíclico.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Teoria Quantitativa da Moeda",
+                        "rationale": "A Teoria Quantitativa da Moeda está mais ligada a pensamentos monetaristas e clássicos, não ao cerne da teoria keynesiana sobre demanda e emprego.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Lembre-se da ideia keynesiana de que 'a demanda cria a sua oferta'."
+            },
+            {
+                "question": "No modelo keynesiano simples, a função consumo (C) é expressa como C = a + b * y. O que representa o termo 'b' nesta função?",
+                "answerOptions": [
+                    {
+                        "text": "O consumo autônomo.",
+                        "rationale": "O consumo autônomo é representado pelo termo 'a', que é o consumo que independe da renda.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "A propensão marginal a poupar.",
+                        "rationale": "A propensão marginal a poupar é (1 - b), que representa a parcela da renda adicional que é poupada.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "A propensão marginal a consumir.",
+                        "rationale": "O termo 'b' é a Propensão Marginal a Consumir (PMgC), que indica a parcela da renda adicional que é gasta em consumo.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "O investimento autônomo.",
+                        "rationale": "O investimento autônomo (I) é um componente da demanda agregada, mas não um termo na função consumo.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "A renda de equilíbrio.",
+                        "rationale": "A renda de equilíbrio (y_e) é o resultado da equação que iguala oferta e demanda agregada, não um termo da função consumo.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Pense em 'b' como a inclinação da curva de consumo em relação à renda."
+            },
+            {
+                "question": "A fórmula do Multiplicador de Investimentos (k) no modelo keynesiano pode ser expressa como k = 1 / (1 - PMgC). O que este multiplicador indica?",
+                "answerOptions": [
+                    {
+                        "text": "Que o aumento do investimento não tem impacto na renda.",
+                        "rationale": "O multiplicador indica que o investimento tem um impacto ampliado na renda, e não nulo.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Que o investimento é sempre igual à poupança.",
+                        "rationale": "Investimento igual à poupança é a condição de equilíbrio, não a função do multiplicador.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Que um investimento inicial gera um aumento proporcional na renda nacional.",
+                        "rationale": "O multiplicador indica um aumento AMPLIFICADO, não apenas proporcional. O aumento é 'k' vezes maior.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Que um gasto autônomo gera um aumento ampliado na renda nacional.",
+                        "rationale": "O multiplicador keynesiano mostra que um gasto inicial (como investimento, gasto do governo ou consumo autônomo) provoca um aumento maior (ampliado) na renda total da economia.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Que a inflação é diretamente proporcional ao investimento.",
+                        "rationale": "A relação direta do multiplicador é com a renda e o produto, não com a inflação de forma direta e exclusiva.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Lembre-se do exemplo do galpão de R$100.000 gerando R$500.000 de renda."
+            },
+            {
+                "question": "No modelo keynesiano completo, incluindo o governo e o setor externo, a demanda agregada (yd) é dada pela soma de quais componentes?",
+                "answerOptions": [
+                    {
+                        "text": "Consumo (C) + Poupança (S) + Impostos (T)",
+                        "rationale": "Esta é uma identidade da renda nacional (como a renda é usada), mas não a definição da demanda agregada.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Investimento (I) + Gastos do Governo (G) + Exportações (X)",
+                        "rationale": "Faltam o consumo e as importações neste somatório para a demanda agregada completa.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Consumo (C) + Investimento (I) + Gastos do Governo (G) + (Exportações (X) - Importações (M))",
+                        "rationale": "Esta é a fórmula correta da demanda agregada para uma economia aberta com setor público, somando todos os gastos na economia.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Produto Interno Bruto (PIB) + Impostos (T) - Subsídios",
+                        "rationale": "O PIB é a medida do produto, não a demanda agregada diretamente, e a fórmula está incorreta para esse fim.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Renda Nacional (y) - Tributos (T)",
+                        "rationale": "Isso representa a renda disponível, não a demanda agregada.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Pense em quem são os 'jogadores' que gastam na economia: famílias, empresas, governo e o resto do mundo."
+            },
+            {
+                "question": "Qual é a condição de equilíbrio da Renda Nacional em uma economia keynesiana, em termos de 'injeções' e 'vazamentos'?",
+                "answerOptions": [
+                    {
+                        "text": "Consumo = Poupança",
+                        "rationale": "Esta é uma condição de equilíbrio em modelos muito simplificados, mas não a representação completa das injeções e vazamentos.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Demanda Agregada = Oferta Agregada",
+                        "rationale": "Esta é a condição geral de equilíbrio (y = yd), mas a pergunta pede especificamente em termos de injeções e vazamentos.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Investimento + Gastos do Governo + Exportações = Poupança + Impostos + Importações",
+                        "rationale": "Esta igualdade representa o equilíbrio entre as 'injeções' (gastos que entram na economia) e os 'vazamentos' (renda que sai do fluxo circular, como poupança, impostos e importações).",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Produto Interno Bbruto = Despesas Governamentais",
+                        "rationale": "Não há uma relação direta de igualdade entre PIB e gastos do governo no equilíbrio geral.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Taxa de Juros = Inflação",
+                        "rationale": "Esta não é uma condição de equilíbrio macroeconômico da renda nacional.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Pense no que 'entra' e no que 'sai' do fluxo circular da renda para que ele se mantenha estável."
+            },
+            {
+                "question": "Com a presença do governo e dos tributos, como é definida a Renda Disponível (yd)?",
+                "answerOptions": [
+                    {
+                        "text": "Renda Nacional (y) + Tributos (T)",
+                        "rationale": "Somar tributos à renda nacional aumentaria a renda disponível, o que é incorreto; tributos são uma saída da renda.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Renda Nacional (y) - Tributos (T)",
+                        "rationale": "A Renda Disponível é a parcela da renda nacional que sobra para as famílias consumirem ou pouparem após o pagamento dos impostos.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Consumo (C) + Poupança (S)",
+                        "rationale": "Esta é a definição de como a renda disponível é utilizada, mas não a própria definição da renda disponível a partir da renda nacional.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Investimento (I) + Gastos do Governo (G)",
+                        "rationale": "Isso representa parte da demanda agregada, não a renda disponível.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Renda total da economia",
+                        "rationale": "A renda total (Renda Nacional) é diferente da renda disponível quando há tributos.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Pense no que realmente 'fica no bolso' das famílias depois da intervenção do governo."
+            },
+            {
+                "question": "Quais são os dois pressupostos chave da teoria keynesiana em relação aos preços e à moeda?",
+                "answerOptions": [
+                    {
+                        "text": "Preços são flexíveis e a moeda é neutra.",
+                        "rationale": "Estes são pressupostos clássicos, que Keynes desafiou.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Preços são inflexíveis e a moeda não é neutra.",
+                        "rationale": "Keynes argumentou que os preços (salários, por exemplo) não se ajustam rapidamente, e que a moeda tem um papel ativo na economia real (influencia investimento, emprego).",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "Preços são flexíveis e a moeda não é neutra.",
+                        "rationale": "Keynes não acreditava que os preços fossem flexíveis no curto prazo.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Preços são inflexíveis e a moeda é neutra.",
+                        "rationale": "Keynes não acreditava que a moeda fosse neutra; pelo contrário, ela era crucial na determinação da demanda agregada.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "Preços e moeda não têm influência na economia real.",
+                        "rationale": "Keynes atribuía grande importância a ambos, especialmente à moeda, no funcionamento da economia real.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "Lembre-se da crítica de Keynes aos modelos que assumiam ajuste automático dos preços e a neutralidade do dinheiro."
+            },
+            {
+                "question": "Considerando a função de consumo C = a + b(y - T), qual é a expressão correta para a função de poupança (S) no modelo keynesiano com tributos?",
+                "answerOptions": [
+                    {
+                        "text": "S = a + (1 - b)(y - T)",
+                        "rationale": "O consumo autônomo 'a' aparece com sinal negativo na função de poupança, pois é um consumo mesmo com renda zero (despoupança).",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "S = y - (a + b(y - T))",
+                        "rationale": "Esta é a definição de poupança (renda disponível menos consumo), que simplifica para a forma correta.",
+                        "isCorrect": true
+                    },
+                    {
+                        "text": "S = -a + (1 - b)(y - T)",
+                        "rationale": "Esta é a forma simplificada da função de poupança quando se distribui o termo (y - T).",
+                        "isCorrect": false // Corrigi para ser false, pois a opção b é a definição primária que se simplifica para essa. E para evitar duas corretas.
+                    },
+                    {
+                        "text": "S = (1 - b)y - a",
+                        "rationale": "Esta forma não considera a renda disponível corretamente, ou seja, desconsidera o efeito dos tributos na poupança.",
+                        "isCorrect": false
+                    },
+                    {
+                        "text": "S = b(y - T) - a",
+                        "rationale": "Esta expressão é incorreta para a função de poupança.",
+                        "isCorrect": false
+                    }
+                ],
+                "hint": "A poupança é o que sobra da renda disponível depois do consumo. Lembre-se que a renda disponível é (y - T)."
+            }
+        ];
+
+        const quizForm = document.getElementById('quizForm');
+        const submitQuizBtn = document.getElementById('submitQuiz');
+        const resultsSection = document.querySelector('.results-section');
+        const userScoreSpan = document.getElementById('userScore');
+        const totalQuestionsSpan = document.getElementById('totalQuestions');
+        const restartQuizBtn = document.getElementById('restartQuiz');
+
+        function renderQuiz() {
+            quizForm.innerHTML = '';
+            quizData.forEach((q, index) => {
+                const questionSection = document.createElement('div');
+                questionSection.classList.add('question-section');
+                questionSection.setAttribute('data-question-index', index);
+
+                const questionNumber = document.createElement('div');
+                questionNumber.classList.add('question-number');
+                questionNumber.textContent = `Questão ${index + 1}:`;
+                questionSection.appendChild(questionNumber);
+
+                const questionText = document.createElement('div');
+                questionText.classList.add('question-text');
+                questionText.textContent = q.question;
+                questionSection.appendChild(questionText);
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options-container');
+
+                q.answerOptions.forEach((option, optionIndex) => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `
+                        <input type="radio" name="question${index}" value="${optionIndex}">
+                        <span>${option.text}</span>
+                        <div class="rationale-text">${option.rationale}</div>
+                    `;
+                    optionsContainer.appendChild(label);
+                });
+
+                questionSection.appendChild(optionsContainer);
+
+                const hintText = document.createElement('div');
+                hintText.classList.add('hint-text');
+                hintText.textContent = `Dica: ${q.hint}`;
+                questionSection.appendChild(hintText);
+
+                quizForm.appendChild(questionSection);
+            });
+            totalQuestionsSpan.textContent = quizData.length;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            document.querySelector('.quiz-container').classList.add('show-results');
+
+            quizData.forEach((q, questionIndex) => {
+                const selectedOption = document.querySelector(`input[name="question${questionIndex}"]:checked`);
+                const questionSection = document.querySelector(`.question-section[data-question-index="${questionIndex}"]`);
+
+                const hint = questionSection.querySelector('.hint-text');
+                if (hint) {
+                    hint.style.display = 'block';
+                }
+
+                q.answerOptions.forEach((option, optionIndex) => {
+                    const label = questionSection.querySelector(`label input[value="${optionIndex}"]`).closest('label');
+                    const rationaleText = label.querySelector('.rationale-text');
+
+                    rationaleText.style.display = 'block';
+
+                    if (option.isCorrect) {
+                        label.classList.add('correct-option');
+                    }
+
+                    if (selectedOption && parseInt(selectedOption.value) === optionIndex) {
+                        label.classList.add('selected');
+                        if (!option.isCorrect) {
+                            label.classList.add('incorrect-option');
+                        }
+                    }
+                });
+            });
+
+            userScoreSpan.textContent = score;
+            resultsSection.style.display = 'block';
+            submitQuizBtn.style.display = 'none';
+            
+            // --- Se você quiser enviar resultados para Formspree, ative a linha abaixo e configure: ---
+            // sendResultsToFormspree(score, collectDetailedResponses()); 
+        }
+
+        // --- Funções auxiliares para Formspree (se você decidir usar) ---
+        // Lembre-se de substituir 'SUA_ID_DO_FORMULARIO' pela sua ID real do Formspree!
+        /*
+        async function sendResultsToFormspree(finalScore, userResponses) {
+            const formspreeEndpoint = 'https://formspree.io/f/SUA_ID_DO_FORMULARIO'; 
+
+            const dataToSend = {
+                score: finalScore,
+                totalQuestions: quizData.length,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                // ipAddress: await getIpAddress(), // Se você criar esta função
+                responses: userResponses
+            };
+
+            try {
+                const response = await fetch(formspreeEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend),
+                });
+
+                if (response.ok) {
+                    console.log('Resultados enviados para Formspree com sucesso!');
+                } else {
+                    console.error('Erro ao enviar resultados para Formspree:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro de rede ao tentar enviar resultados para Formspree:', error);
+            }
+        }
+
+        // Função auxiliar para coletar todas as respostas detalhadas
+        function collectDetailedResponses() {
+            const responses = [];
+            quizData.forEach((q, questionIndex) => {
+                const selectedRadio = document.querySelector(`input[name="question${questionIndex}"]:checked`);
+                let selectedAnswerText = "Não respondida";
+                let isCorrect = false;
+
+                const correctOption = q.answerOptions.find(opt => opt.isCorrect);
+                const correctAnswerText = correctOption ? correctOption.text : "N/A";
+
+                if (selectedRadio) {
+                    const selectedOptionIndex = parseInt(selectedRadio.value);
+                    selectedAnswerText = q.answerOptions[selectedOptionIndex].text;
+                    isCorrect = q.answerOptions[selectedOptionIndex].isCorrect;
+                }
+
+                responses.push({
+                    question: q.question,
+                    selectedAnswer: selectedAnswerText,
+                    correctAnswer: correctAnswerText,
+                    wasCorrect: isCorrect
+                });
+            });
+            return responses;
+        }
+        */
+        // --- Fim das funções auxiliares para Formspree ---
+
+
+        function resetQuiz() {
+            quizForm.reset();
+            resultsSection.style.display = 'none';
+            submitQuizBtn.style.display = 'block';
+            document.querySelector('.quiz-container').classList.remove('show-results');
+
+            document.querySelectorAll('.question-section').forEach(section => {
+                section.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('selected', 'correct-option', 'incorrect-option');
+                    label.querySelector('.rationale-text').style.display = 'none';
+                });
+                const hintText = section.querySelector('.hint-text');
+                if (hintText) {
+                    hintText.style.display = 'none';
+                }
+            });
+            window.scrollTo(0, 0);
+        }
+
+        submitQuizBtn.addEventListener('click', checkAnswers);
+        restartQuizBtn.addEventListener('click', resetQuiz);
+
+        renderQuiz();
+    </script>
+</body>
+</html>
