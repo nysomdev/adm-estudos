@@ -217,7 +217,7 @@
             padding: 12px 25px;
             color: white;
             border: none;
-            border-radius: 8em; /* Ajustado para 8px para um botão mais redondo */
+            border-radius: 8px; /* Ajustado para 8px, para um botão mais padrão */
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease;
@@ -241,6 +241,8 @@
     </div>
 
     <script>
+        console.log("Script loaded."); // Debug 1: Confirma que o script está sendo carregado
+
         const quizData = [
             {
                 "question": "Qual é o ramo da economia que estuda as variáveis agregadas de um país, como Produto Interno Bruto (PIB), desemprego, inflação e taxas de juros?",
@@ -439,17 +441,4 @@
                     {
                         "text": "Demanda Agregada = Oferta Agregada",
                         "rationale": "Esta é a condição geral de equilíbrio (y = yd), mas a pergunta pede especificamente em termos de injeções e vazamentos.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "Investimento + Gastos do Governo + Exportações = Poupança + Impostos + Importações",
-                        "rationale": "Esta igualdade representa o equilíbrio entre as 'injeções' (gastos que entram na economia) e os 'vazamentos' (renda que sai do fluxo circular, como poupança, impostos e importações).",
-                        "isCorrect": true
-                    },
-                    {
-                        "text": "Produto Interno Bbruto = Despesas Governamentais",
-                        "rationale": "Não há uma relação direta de igualdade entre PIB e gastos do governo no equilíbrio geral.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "Taxa de Juros
+                        "
