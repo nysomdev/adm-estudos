@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisão Interativa: Macroeconomia</title>
+    <title>Revisão Interativa: Macroeconomia e Revolução Keynesiana</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -229,7 +229,7 @@
 </head>
 <body>
     <div class="quiz-container">
-        <h1>Revisão Interativa: Macroeconomia</h1>
+        <h1>Revisão Interativa: Macroeconomia e Revolução Keynesiana</h1>
         <span class="author-name">Autor: Wenysom Filipe</span>
         <form id="quizForm">
             </form>
@@ -530,14 +530,14 @@
                         "isCorrect": false
                     },
                     {
-                        "text": "S = y - (a + b(y - T))",
-                        "rationale": "Esta é a definição de poupança (renda disponível menos consumo), que simplifica para a forma correta.",
-                        "isCorrect": true
+                        "text": "S = y - a + b(y - T)", // Esta opção foi alterada para ser INCORRETA.
+                        "rationale": "Esta expressão está incorreta, pois inverte o sinal da propensão marginal a consumir ao tentar deduzir a poupança da renda disponível.",
+                        "isCorrect": false
                     },
                     {
-                        "text": "S = -a + (1 - b)(y - T)",
-                        "rationale": "Esta é a forma simplificada da função de poupança quando se distribui o termo (y - T).",
-                        "isCorrect": false // Corrigi para ser false, pois a opção b é a definição primária que se simplifica para essa. E para evitar duas corretas.
+                        "text": "S = -a + (1 - b)(y - T)", // ESTA AGORA É A ÚNICA ALTERNATIVA CORRETA.
+                        "rationale": "Esta é a expressão simplificada e correta da função de poupança, que representa a parcela da renda disponível que não é consumida.",
+                        "isCorrect": true
                     },
                     {
                         "text": "S = (1 - b)y - a",
@@ -638,75 +638,7 @@
             userScoreSpan.textContent = score;
             resultsSection.style.display = 'block';
             submitQuizBtn.style.display = 'none';
-            
-            // --- Se você quiser enviar resultados para Formspree, ative a linha abaixo e configure: ---
-            // sendResultsToFormspree(score, collectDetailedResponses()); 
         }
-
-        // --- Funções auxiliares para Formspree (se você decidir usar) ---
-        // Lembre-se de substituir 'SUA_ID_DO_FORMULARIO' pela sua ID real do Formspree!
-        /*
-        async function sendResultsToFormspree(finalScore, userResponses) {
-            const formspreeEndpoint = 'https://formspree.io/f/SUA_ID_DO_FORMULARIO'; 
-
-            const dataToSend = {
-                score: finalScore,
-                totalQuestions: quizData.length,
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                // ipAddress: await getIpAddress(), // Se você criar esta função
-                responses: userResponses
-            };
-
-            try {
-                const response = await fetch(formspreeEndpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(dataToSend),
-                });
-
-                if (response.ok) {
-                    console.log('Resultados enviados para Formspree com sucesso!');
-                } else {
-                    console.error('Erro ao enviar resultados para Formspree:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Erro de rede ao tentar enviar resultados para Formspree:', error);
-            }
-        }
-
-        // Função auxiliar para coletar todas as respostas detalhadas
-        function collectDetailedResponses() {
-            const responses = [];
-            quizData.forEach((q, questionIndex) => {
-                const selectedRadio = document.querySelector(`input[name="question${questionIndex}"]:checked`);
-                let selectedAnswerText = "Não respondida";
-                let isCorrect = false;
-
-                const correctOption = q.answerOptions.find(opt => opt.isCorrect);
-                const correctAnswerText = correctOption ? correctOption.text : "N/A";
-
-                if (selectedRadio) {
-                    const selectedOptionIndex = parseInt(selectedRadio.value);
-                    selectedAnswerText = q.answerOptions[selectedOptionIndex].text;
-                    isCorrect = q.answerOptions[selectedOptionIndex].isCorrect;
-                }
-
-                responses.push({
-                    question: q.question,
-                    selectedAnswer: selectedAnswerText,
-                    correctAnswer: correctAnswerText,
-                    wasCorrect: isCorrect
-                });
-            });
-            return responses;
-        }
-        */
-        // --- Fim das funções auxiliares para Formspree ---
-
 
         function resetQuiz() {
             quizForm.reset();
