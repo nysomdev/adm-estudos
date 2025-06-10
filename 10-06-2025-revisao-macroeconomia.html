@@ -217,7 +217,7 @@
             padding: 12px 25px;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 8px; /* Ajustado para 8px, para um botão mais padrão */
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease;
@@ -241,6 +241,8 @@
     </div>
 
     <script>
+        console.log("Script loaded."); // Debug 1: Confirma que o script está sendo carregado
+
         const quizData = [
             {
                 "question": "Qual é o ramo da economia que estuda as variáveis agregadas de um país, como Produto Interno Bruto (PIB), desemprego, inflação e taxas de juros?",
@@ -500,187 +502,4 @@
                     },
                     {
                         "text": "Preços são inflexíveis e a moeda não é neutra.",
-                        "rationale": "Keynes argumentou que os preços (salários, por exemplo) não se ajustam rapidamente, e que a moeda tem um papel ativo na economia real (influencia investimento, emprego).",
-                        "isCorrect": true
-                    },
-                    {
-                        "text": "Preços são flexíveis e a moeda não é neutra.",
-                        "rationale": "Keynes não acreditava que os preços fossem flexíveis no curto prazo.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "Preços são inflexíveis e a moeda é neutra.",
-                        "rationale": "Keynes não acreditava que a moeda fosse neutra; pelo contrário, ela era crucial na determinação da demanda agregada.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "Preços e moeda não têm influência na economia real.",
-                        "rationale": "Keynes atribuía grande importância a ambos, especialmente à moeda, no funcionamento da economia real.",
-                        "isCorrect": false
-                    }
-                ],
-                "hint": "Lembre-se da crítica de Keynes aos modelos que assumiam ajuste automático dos preços e a neutralidade do dinheiro."
-            },
-            {
-                "question": "Considerando a função de consumo C = a + b(y - T), qual é a expressão correta para a função de poupança (S) no modelo keynesiano com tributos?",
-                "answerOptions": [
-                    {
-                        "text": "S = a + (1 - b)(y - T)",
-                        "rationale": "O consumo autônomo 'a' aparece com sinal negativo na função de poupança, pois é um consumo mesmo com renda zero (despoupança).",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "S = y + b - T",
-                        "rationale": "Esta expressão não representa corretamente a função de poupança e ignora a relação fundamental entre renda, consumo e tributos na poupança.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "S = -a + (1 - b)(y - T)",
-                        "rationale": "Esta é a expressão simplificada e correta da função de poupança, que representa a parcela da renda disponível que não é consumida.",
-                        "isCorrect": true
-                    },
-                    {
-                        "text": "S = (1 - b)y - a",
-                        "rationale": "Esta forma não considera a renda disponível corretamente, ou seja, desconsidera o efeito dos tributos na poupança.",
-                        "isCorrect": false
-                    },
-                    {
-                        "text": "S = b(y - T) - a",
-                        "rationale": "Esta expressão é incorreta para a função de poupança.",
-                        "isCorrect": false
-                    }
-                ],
-                "hint": "A poupança é o que sobra da renda disponível depois do consumo. Lembre-se que a renda disponível é (y - T)."
-            }
-        ];
-
-        // Variáveis globais para os elementos HTML
-        const quizForm = document.getElementById('quizForm');
-        const submitQuizBtn = document.getElementById('submitQuiz');
-        const resultsSection = document.querySelector('.results-section');
-        const userScoreSpan = document.getElementById('userScore');
-        const totalQuestionsSpan = document.getElementById('totalQuestions');
-        const restartQuizBtn = document.getElementById('restartQuiz'); 
-
-        // Adiciona os objetos de áudio
-        const audioLowScore = new Audio('audio1.mp3'); // Caminho para o arquivo de áudio de pontuação baixa
-        const audioHighScore = new Audio('audio2.mp3'); // Caminho para o arquivo de áudio de pontuação alta
-
-        // Função para renderizar o quiz na página
-        function renderQuiz() {
-            quizForm.innerHTML = '';
-            quizData.forEach((q, index) => {
-                const questionSection = document.createElement('div');
-                questionSection.classList.add('question-section');
-                questionSection.setAttribute('data-question-index', index);
-
-                const questionNumber = document.createElement('div');
-                questionNumber.classList.add('question-number');
-                questionNumber.textContent = `Questão ${index + 1}:`;
-                questionSection.appendChild(questionNumber);
-
-                const questionText = document.createElement('div');
-                questionText.classList.add('question-text');
-                questionText.textContent = q.question;
-                questionSection.appendChild(questionText);
-
-                const optionsContainer = document.createElement('div');
-                optionsContainer.classList.add('options-container');
-
-                q.answerOptions.forEach((option, optionIndex) => {
-                    const label = document.createElement('label');
-                    label.innerHTML = `
-                        <input type="radio" name="question${index}" value="${optionIndex}">
-                        <span>${option.text}</span>
-                        <div class="rationale-text">${option.rationale}</div>
-                    `;
-                    optionsContainer.appendChild(label);
-                });
-
-                questionSection.appendChild(optionsContainer);
-
-                const hintText = document.createElement('div');
-                hintText.classList.add('hint-text');
-                hintText.textContent = `Dica: ${q.hint}`;
-                questionSection.appendChild(hintText);
-
-                quizForm.appendChild(questionSection);
-            });
-            totalQuestionsSpan.textContent = quizData.length;
-        }
-
-        // Função para verificar as respostas e exibir os resultados
-        function checkAnswers() {
-            let score = 0;
-            document.querySelector('.quiz-container').classList.add('show-results');
-
-            quizData.forEach((q, questionIndex) => {
-                const selectedOption = document.querySelector(`input[name="question${questionIndex}"]:checked`);
-                const questionSection = document.querySelector(`.question-section[data-question-index="${questionIndex}"]`);
-
-                const hint = questionSection.querySelector('.hint-text');
-                if (hint) {
-                    hint.style.display = 'block';
-                }
-
-                q.answerOptions.forEach((option, optionIndex) => {
-                    const label = questionSection.querySelector(`label input[value="${optionIndex}"]`).closest('label');
-                    const rationaleText = label.querySelector('.rationale-text');
-
-                    rationaleText.style.display = 'block';
-
-                    if (option.isCorrect) {
-                        label.classList.add('correct-option');
-                    }
-
-                    if (selectedOption && parseInt(selectedOption.value) === optionIndex) {
-                        label.classList.add('selected');
-                        if (!option.isCorrect) {
-                            label.classList.add('incorrect-option');
-                        }
-                    }
-                });
-            });
-
-            userScoreSpan.textContent = score;
-            resultsSection.style.display = 'block';
-            submitQuizBtn.style.display = 'none';
-
-            // --- Lógica para tocar o áudio com base na pontuação ---
-            if (score < 7) {
-                audioLowScore.play(); // Toca audio1.mp3
-            } else {
-                audioHighScore.play(); // Toca audio2.mp3
-            }
-            // --- Fim da lógica de áudio ---
-        }
-
-        // Função para resetar o quiz
-        function resetQuiz() {
-            quizForm.reset();
-            resultsSection.style.display = 'none';
-            submitQuizBtn.style.display = 'block';
-            document.querySelector('.quiz-container').classList.remove('show-results');
-
-            document.querySelectorAll('.question-section').forEach(section => {
-                section.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('selected', 'correct-option', 'incorrect-option');
-                    label.querySelector('.rationale-text').style.display = 'none';
-                });
-                const hintText = section.querySelector('.hint-text');
-                if (hintText) {
-                    hintText.style.display = 'none';
-                }
-            });
-            window.scrollTo(0, 0);
-        }
-
-        // Adiciona os event listeners aos botões
-        submitQuizBtn.addEventListener('click', checkAnswers);
-        restartQuizBtn.addEventListener('click', resetQuiz);
-
-        // Renderiza o quiz ao carregar a página
-        renderQuiz();
-    </script>
-</body>
-</html>
+                        "rationale": "Keynes argumentou que os preços (salários, por exemplo) não se ajust
